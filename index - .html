@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dwayne - Trainer Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #EE1515;
+  --red-dark: #CC0000;
+  --yellow: #FFDE21;
+  --yellow-glow: #FFD700;
+  --white: #FFFFFF;
+  --black: #1A1A2E;
+  --gray: #6B7280;
+  --light-gray: #F3F4F6;
+  --card-bg: #FFFFFF;
+  --text: #1A1A2E;
+  --text-secondary: #6B7280;
+  --bg: #F0F2F5;
+  --section-alt: #FFFFFF;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.12);
+  --border: #E5E7EB;
+  --nav-bg: rgba(255,255,255,0.9);
+}
+
+[data-theme="dark"] {
+  --card-bg: #1E1E3A;
+  --text: #F0F2F5;
+  --text-secondary: #9CA3AF;
+  --bg: #12121E;
+  --section-alt: #1A1A2E;
+  --shadow: 0 4px 20px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.4);
+  --border: #2D2D4A;
+  --nav-bg: rgba(18,18,30,0.95);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ─── SVG BASE ─── */
+.icon-svg { display: inline-block; flex-shrink: 0; }
+.icon-svg svg { display: block; width: 100%; height: 100%; }
+
+/* ─── LOADING SCREEN ─── */
+#loader {
+  position: fixed; inset: 0;
+  background: var(--black);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; }
+
+.loader-pokeball { width: 80px; height: 80px; animation: spinBall 1s ease-in-out infinite; }
+
+@keyframes spinBall {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: var(--white);
+  margin-top: 24px;
+  animation: pulse 0.8s ease-in-out infinite alternate;
+}
+@media (max-width: 480px) {
+  .loader-text { font-size: 8px; }
+}
+
+@keyframes pulse {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+/* ─── NAVIGATION ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  padding: 0 24px;
+  height: 64px;
+}
+.nav-logo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--red);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo-icon { width: 28px; height: 28px; animation: spinBall 3s linear infinite; }
+.nav-links {
+  display: flex; gap: 8px;
+  margin-left: auto;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--red);
+  background: rgba(238,21,21,0.08);
+}
+
+.shiny-toggle {
+  margin-left: 12px;
+  background: none; border: none;
+  cursor: pointer;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  background: var(--light-gray);
+}
+[data-theme="dark"] .shiny-toggle { background: #2D2D4A; }
+.shiny-toggle:hover { transform: scale(1.1); }
+.shiny-star { transition: transform 0.3s; }
+[data-theme="dark"] .shiny-star { transform: rotate(360deg); }
+
+.mobile-menu-btn {
+  display: none;
+  background: none; border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 4px;
+}
+.mobile-menu-btn span {
+  display: block;
+  width: 20px; height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+.mobile-menu-btn.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.mobile-menu-btn.open span:nth-child(2) { opacity: 0; }
+.mobile-menu-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+@media (max-width: 768px) {
+  .nav-links {
+    position: fixed; top: 64px; left: 0; right: 0;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    flex-direction: column;
+    padding: 16px;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+  }
+  .nav-links.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .mobile-menu-btn { display: flex; }
+}
+
+/* ─── SECTIONS ─── */
+section {
+  padding: 100px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-alt { background: var(--section-alt); }
+.section-tag {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--red);
+  padding: 6px 12px;
+  background: rgba(238,21,21,0.08);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.section-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.section-title .highlight { color: var(--red); }
+.section-title .highlight-yellow { color: var(--yellow); }
+.section-sub {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 48px;
+}
+
+/* ─── HERO ─── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 80px;
+}
+
+#hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(255,222,33,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(238,21,21,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.pikachu-row {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pikachu-sprite {
+  height: 80px;
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+  image-rendering: pixelated;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.thunderbolts {
+  display: flex; gap: 4px;
+}
+.lightning-icon { width: 28px; height: 28px; }
+
+.hero-badge {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--red);
+  padding: 8px 16px;
+  background: rgba(238,21,21,0.08);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+#hero h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+#hero h1 .highlight { color: var(--red); }
+#hero h1 .highlight-yellow { color: var(--yellow); }
+
+.hero-sub {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin-bottom: 32px;
+}
+
+.hero-actions {
+  display: flex; gap: 12px;
+  flex-wrap: wrap; justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center; gap: 8px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+.btn .btn-icon { width: 18px; height: 18px; }
+
+.btn-primary {
+  background: var(--red);
+  color: var(--white);
+  box-shadow: 0 4px 16px rgba(238,21,21,0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(238,21,21,0.4);
+}
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 100%);
+  pointer-events: none;
+}
+
+.btn-secondary {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+}
+.btn-secondary:hover {
+  border-color: var(--yellow);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.scroll-indicator {
+  position: absolute; bottom: 40px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  animation: bobDown 2s ease-in-out infinite;
+}
+.scroll-indicator .arrow-svg { width: 24px; height: 24px; }
+@keyframes bobDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* ─── ABOUT ─── */
+#about { padding-top: 80px; padding-bottom: 80px; }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.about-image { position: relative; }
+.about-image img {
+  width: 100%; max-width: 400px;
+  border-radius: 20px;
+  display: block;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s;
+}
+.about-image img:hover { transform: scale(1.02); }
+
+.about-image .badge {
+  position: absolute;
+  bottom: -12px; right: -12px;
+  background: var(--red);
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(238,21,21,0.3);
+  display: flex; align-items: center; gap: 6px;
+}
+.badge-icon { width: 18px; height: 18px; }
+
+.about-text h2 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+.about-text p {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  font-size: 1.02rem;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+.stat-card .stat-icon { width: 28px; height: 28px; margin: 0 auto 4px; display: block; }
+.stat-card .label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ─── TEAM ─── */
+#team { padding-top: 80px; padding-bottom: 80px; }
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.team-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.team-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+.team-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 4px;
+}
+.team-card.type-electric::before { background: var(--yellow); }
+.team-card.type-fire::before { background: var(--red); }
+.team-card.type-water::before { background: #3B82F6; }
+
+.team-card .team-avatar { width: 56px; height: 56px; margin: 0 auto 12px; }
+
+.team-card .type-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.type-badge .badge-type-icon { width: 14px; height: 14px; }
+
+.type-electric .type-badge { background: rgba(255,222,33,0.2); color: #B8860B; }
+[data-theme="dark"] .type-electric .type-badge { background: rgba(255,222,33,0.15); color: var(--yellow); }
+.type-fire .type-badge { background: rgba(238,21,21,0.1); color: var(--red); }
+[data-theme="dark"] .type-fire .type-badge { background: rgba(238,21,21,0.15); color: #FF6B6B; }
+.type-water .type-badge { background: rgba(59,130,246,0.1); color: #2563EB; }
+[data-theme="dark"] .type-water .type-badge { background: rgba(59,130,246,0.15); color: #60A5FA; }
+
+.team-card h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+.team-card .role {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.team-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.leader-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: var(--yellow);
+  margin-top: 12px;
+  padding: 4px 10px;
+  background: rgba(255,222,33,0.1);
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+.leader-badge .star-icon { width: 10px; height: 10px; }
+
+/* ─── HOBBIES ─── */
+#hobbies { padding-top: 80px; padding-bottom: 80px; }
+
+.hobbies-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.hobby-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.3s;
+}
+.hobby-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.hobby-icon-wrap {
+  flex-shrink: 0;
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--light-gray);
+  border-radius: 14px;
+}
+[data-theme="dark"] .hobby-icon-wrap { background: #2D2D4A; }
+.hobby-icon-wrap .hobby-svg { width: 30px; height: 30px; }
+
+.hobby-info { flex: 1; }
+.hobby-info h4 {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--light-gray);
+  border-radius: 4px;
+  overflow: hidden;
+}
+[data-theme="dark"] .bar-track { background: #2D2D4A; }
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  width: 0;
+  transition: width 1s ease-out;
+}
+.bar-fill.fill { width: var(--level); }
+.bar-fill.red { background: var(--red); }
+.bar-fill.yellow { background: var(--yellow); }
+.bar-fill.blue { background: #3B82F6; }
+.bar-fill.green { background: #10B981; }
+
+.bar-label {
+  display: flex; justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ─── DREAMS ─── */
+#dreams {
+  padding-top: 80px; padding-bottom: 80px;
+  text-align: center;
+}
+
+.dream-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+.dream-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--red), var(--yellow), var(--red));
+}
+
+.dream-card .dream-icon-big { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
+.dream-card h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+.dream-card p {
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto 24px;
+}
+
+.dream-stats {
+  display: flex; justify-content: center; gap: 32px;
+  flex-wrap: wrap;
+}
+.dream-stat { text-align: center; }
+.dream-stat .num {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 20px;
+  color: var(--red);
+}
+.dream-stat .label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ─── CONNECT ─── */
+#connect { padding-top: 80px; padding-bottom: 80px; }
+
+.connect-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.connect-btn {
+  display: flex;
+  align-items: center; justify-content: center; gap: 10px;
+  padding: 16px 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+.connect-btn .connect-icon { width: 20px; height: 20px; }
+.connect-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  text-align: center;
+  padding: 32px 24px;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.footer-pokeball { width: 24px; height: 24px; margin: 0 auto 8px; animation: spinBall 3s linear infinite; }
+
+/* ─── SVG ANIMATIONS ─── */
+
+/* Thunderbolt: glow & pulse */
+.svg-lightning {
+  animation: lightningGlow 1.5s ease-in-out infinite;
+}
+@keyframes lightningGlow {
+  0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 2px rgba(255,222,33,0.3)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(255,222,33,0.8)); }
+}
+
+/* Flame: flicker */
+.svg-flame { animation: flameFlicker 1.2s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes flameFlicker {
+  0% { transform: scale(1) rotate(-1deg); opacity: 0.8; }
+  25% { transform: scale(1.05) rotate(0.5deg); opacity: 1; }
+  50% { transform: scale(0.98) rotate(-0.5deg); opacity: 0.9; }
+  75% { transform: scale(1.03) rotate(0.3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 0.85; }
+}
+
+/* Water drop: ripple */
+.svg-drop { animation: dropRipple 3s ease-in-out infinite; transform-origin: center; }
+@keyframes dropRipple {
+  0%, 100% { transform: scaleY(1); opacity: 0.8; }
+  50% { transform: scaleY(1.08); opacity: 1; }
+}
+
+/* Card games: slide */
+.svg-cards { animation: cardsSlide 2s ease-in-out infinite; }
+@keyframes cardsSlide {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+/* Running: bounce */
+.svg-run { animation: runBounce 0.8s ease-in-out infinite; }
+@keyframes runBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* TV: scan */
+.svg-tv { animation: tvScan 3s linear infinite; }
+@keyframes tvScan {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* PC/build: pulse */
+.svg-pc { animation: pcPulse 2s ease-in-out infinite; }
+@keyframes pcPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Game controller: wiggle */
+.svg-controller { animation: controllerWiggle 1.5s ease-in-out infinite; transform-origin: center; }
+@keyframes controllerWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+/* Scroll arrow */
+.svg-arrow { animation: arrowPulse 2s ease-in-out infinite; }
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Star spin (shiny toggle) */
+.svg-star { animation: starTwinkle 2s ease-in-out infinite; }
+@keyframes starTwinkle {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+/* ─── REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; text-align: center; }
+  .about-image { display: flex; justify-content: center; }
+  .team-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+  .hobbies-grid { grid-template-columns: 1fr; }
+  .connect-grid { grid-template-columns: 1fr; }
+  section { padding: 60px 20px; }
+}
+
+@media (max-width: 480px) {
+  .section-title { font-size: 1.7rem; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat-card { padding: 12px 8px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .btn { width: 100%; justify-content: center; }
+  .pikachu-sprite { height: 50px; }
+  .lightning-icon { width: 20px; height: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── LOADER ─── -->
+<div id="loader">
+  <svg class="loader-pokeball" viewBox="0 0 100 100">
+    <path d="M50 10 A40 40 0 1 0 50 90 A40 40 0 1 0 50 10" fill="none" stroke="#333" stroke-width="2"/>
+    <path d="M10 50 L90 50" stroke="#333" stroke-width="4"/>
+    <path d="M50 10 A40 40 0 0 1 90 50" fill="#EE1515"/>
+    <path d="M50 90 A40 40 0 0 1 10 50" fill="#fff"/>
+    <circle cx="50" cy="50" r="12" fill="none" stroke="#333" stroke-width="4"/>
+    <circle cx="50" cy="50" r="6" fill="#fff" stroke="#333" stroke-width="2"/>
+  </svg>
+  <div class="loader-text">Loading...</div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <svg class="nav-logo-icon icon-svg" viewBox="0 0 28 28">
+        <path d="M14 2 A12 12 0 1 0 14 26 A12 12 0 1 0 14 2" fill="none" stroke="currentColor" stroke-width="1"/>
+        <path d="M2 14 L26 14" stroke="currentColor" stroke-width="2.5"/>
+        <path d="M14 2 A12 12 0 0 1 26 14" fill="#EE1515"/>
+        <path d="M14 26 A12 12 0 0 1 2 14" fill="#fff"/>
+        <circle cx="14" cy="14" r="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="14" cy="14" r="2" fill="#fff"/>
+      </svg>
+      Dwayne
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#hobbies">Skills</a></li>
+      <li><a href="#dreams">Dream</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+    <button class="shiny-toggle" id="shinyToggle" aria-label="Toggle shiny mode">
+      <svg class="shiny-star icon-svg" width="20" height="20" viewBox="0 0 24 24">
+        <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" fill="var(--yellow)" stroke="var(--yellow-glow)" stroke-width="0.5"/>
+      </svg>
+    </button>
+    <button class="mobile-menu-btn" id="mobileBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="pikachu-row">
+    <div class="thunderbolts">
+      <svg class="lightning-icon icon-svg svg-lightning" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+      <svg class="lightning-icon icon-svg svg-lightning" viewBox="0 0 24 24" style="animation-delay:0.2s"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+      <svg class="lightning-icon icon-svg svg-lightning" viewBox="0 0 24 24" style="animation-delay:0.4s"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+    </div>
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/25.gif" alt="Pikachu" class="pikachu-sprite">
+    <div class="thunderbolts">
+      <svg class="lightning-icon icon-svg svg-lightning" viewBox="0 0 24 24" style="animation-delay:0.3s"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+      <svg class="lightning-icon icon-svg svg-lightning" viewBox="0 0 24 24" style="animation-delay:0.5s"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+      <svg class="lightning-icon icon-svg svg-lightning" viewBox="0 0 24 24" style="animation-delay:0.7s"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+    </div>
+  </div>
+
+  <div class="hero-badge">TRAINER PROFILE</div>
+
+  <h1>Hi, I'm <span class="highlight">Dwayne</span><br>Aspiring <span class="highlight-yellow">Game Developer</span></h1>
+
+  <p class="hero-sub">
+    Pokémon Trainer • Builder • Dreamer<br>
+    On a mission to create awesome games
+  </p>
+
+  <div class="hero-actions">
+    <a href="#about" class="btn btn-primary">
+      <svg class="btn-icon icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>
+      Explore My World
+    </a>
+    <a href="#connect" class="btn btn-secondary">
+      <svg class="btn-icon icon-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/></svg>
+      Let's Connect
+    </a>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <svg class="arrow-svg svg-arrow" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <span class="section-tag">✦ WHO AM I</span>
+  <h2 class="section-title">Meet <span class="highlight">Dwayne</span></h2>
+  <p class="section-sub">An aspiring game developer from the Kanto region... okay, not Kanto — but his imagination is just as wild.</p>
+
+  <div class="about-grid">
+    <div class="about-image">
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu — Dwayne's Partner Pokémon" loading="eager">
+      <div class="badge">
+        <svg class="badge-icon icon-svg" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="currentColor"/></svg>
+        Partner: Pikachu
+      </div>
+    </div>
+    <div class="about-text">
+      <p>Hey there! I'm Dwayne. I love Pokémon, I'm learning HTML, and my dream is to build awesome games that people will love to play.</p>
+      <p>Every day I'm leveling up my skills — from writing my first lines of code to designing worlds that feel alive. This site is my Trainer Card, my journal, and my mission board all in one.</p>
+      <p>When I'm not coding, you'll find me battling with cards, running outside, watching cartoons, or building something cool on my PC.</p>
+      <p>Oh, and I don't journey alone. Scroll down to meet my team!</p>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <svg class="stat-icon icon-svg svg-lightning" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+          <div class="label">Type: Electric</div>
+        </div>
+        <div class="stat-card">
+          <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--red);margin-bottom:4px">Lv.1</div>
+          <div class="label">HTML Journey</div>
+        </div>
+        <div class="stat-card">
+          <svg class="stat-icon icon-svg svg-star" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" fill="var(--yellow)"/></svg>
+          <div class="label">Dreams</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TEAM ─── -->
+<section id="team" class="section-alt">
+  <div style="text-align:center">
+    <span class="section-tag">✦ MY SQUAD</span>
+    <h2 class="section-title">Trainer <span class="highlight">Team</span></h2>
+    <p class="section-sub" style="margin:0 auto 48px">No trainer journeys alone. Here's my core team of 3 — unstoppable together.</p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card type-electric">
+      <svg class="team-avatar icon-svg svg-lightning" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="var(--yellow)"/></svg>
+      <div><span class="type-badge"><svg class="badge-type-icon icon-svg" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="currentColor"/></svg> Electric</span></div>
+      <h3>Dwayne</h3>
+      <div class="role">Team Leader • Game Dev in Training</div>
+      <p>The visionary. Fueled by Pikachu energy and big dreams. Learning to code one PokéBall at a time.</p>
+      <div class="leader-badge">
+        <svg class="star-icon icon-svg" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" fill="currentColor"/></svg>
+        TEAM LEADER
+      </div>
+    </div>
+
+    <div class="team-card type-fire">
+      <svg class="team-avatar icon-svg svg-flame" viewBox="0 0 24 24"><path d="M12 23c-2-4-6-6-6-10 0-4 3-8 6-11 3 3 6 7 6 11 0 4-4 6-6 10z" fill="var(--red)"/></svg>
+      <div><span class="type-badge"><svg class="badge-type-icon icon-svg" viewBox="0 0 24 24"><path d="M12 23c-2-4-6-6-6-10 0-4 3-8 6-11 3 3 6 7 6 11 0 4-4 6-6 10z" fill="currentColor"/></svg> Fire</span></div>
+      <h3>Samantha</h3>
+      <div class="role">Strategist • Problem Solver</div>
+      <p>Sharp-minded and quick to act. Samantha's the one who figures out the puzzle before anyone else has even read the instructions.</p>
+    </div>
+
+    <div class="team-card type-water">
+      <svg class="team-avatar icon-svg svg-drop" viewBox="0 0 24 24"><path d="M12 2C12 2 5 11 5 16c0 4 3 7 7 7s7-3 7-7c0-5-7-14-7-14z" fill="#3B82F6"/></svg>
+      <div><span class="type-badge"><svg class="badge-type-icon icon-svg" viewBox="0 0 24 24"><path d="M12 2C12 2 5 11 5 16c0 4 3 7 7 7s7-3 7-7c0-5-7-14-7-14z" fill="currentColor"/></svg> Water</span></div>
+      <h3>Sapphire</h3>
+      <div class="role">Creative • Idea Generator</div>
+      <p>Calm, deep, and endlessly creative. Sapphire brings the ideas that make every project feel fresh and exciting.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOBBIES ─── -->
+<section id="hobbies">
+  <div style="text-align:center">
+    <span class="section-tag">✦ TRAINER SKILLS</span>
+    <h2 class="section-title">My <span class="highlight">Hobbies</span></h2>
+    <p class="section-sub" style="margin:0 auto 48px">Even a Pokémon Trainer needs hobbies. Here's how I spend my time outside of coding.</p>
+  </div>
+
+  <div class="hobbies-grid">
+    <div class="hobby-card reveal">
+      <div class="hobby-icon-wrap">
+        <svg class="hobby-svg icon-svg svg-cards" viewBox="0 0 48 48">
+          <rect x="8" y="6" width="28" height="36" rx="3" fill="var(--red)" opacity="0.85"/>
+          <rect x="14" y="8" width="28" height="36" rx="3" fill="var(--yellow)" opacity="0.85"/>
+          <rect x="20" y="10" width="28" height="36" rx="3" fill="#3B82F6" opacity="0.85"/>
+          <text x="26" y="33" font-size="18" font-weight="bold" fill="white" font-family="Inter">♠</text>
+        </svg>
+      </div>
+      <div class="hobby-info">
+        <h4>Card Games</h4>
+        <div class="bar-track">
+          <div class="bar-fill red" data-level="85%" style="width:0"></div>
+        </div>
+        <div class="bar-label"><span>Master Trainer</span><span>85%</span></div>
+      </div>
+    </div>
+
+    <div class="hobby-card reveal">
+      <div class="hobby-icon-wrap">
+        <svg class="hobby-svg icon-svg svg-run" viewBox="0 0 48 48">
+          <circle cx="24" cy="10" r="5" fill="var(--red)" stroke="var(--red)" stroke-width="1.5"/>
+          <path d="M14 28 L22 24 L24 32 L18 44" fill="none" stroke="var(--red)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M24 32 L30 44" fill="none" stroke="var(--red)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M20 38 L28 36" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M12 40 Q18 36 22 28" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <path d="M22 24 L32 20 L30 26 Z" fill="var(--red)" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="hobby-info">
+        <h4>Running</h4>
+        <div class="bar-track">
+          <div class="bar-fill blue" data-level="65%" style="width:0"></div>
+        </div>
+        <div class="bar-label"><span>Getting Faster</span><span>65%</span></div>
+      </div>
+    </div>
+
+    <div class="hobby-card reveal">
+      <div class="hobby-icon-wrap">
+        <svg class="hobby-svg icon-svg svg-tv" viewBox="0 0 48 48">
+          <rect x="6" y="10" width="36" height="26" rx="3" fill="var(--yellow)" stroke="var(--yellow)" stroke-width="1.5"/>
+          <rect x="10" y="14" width="28" height="18" rx="1" fill="#fff"/>
+          <path d="M18 8 L16 4" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M30 8 L32 4" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M24 36 L24 40" fill="none" stroke="var(--yellow)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M18 40 L30 40" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round"/>
+          <rect x="17" y="18" width="14" height="10" rx="1" fill="none" stroke="#333" stroke-width="1.5"/>
+          <circle cx="24" cy="23" r="3" fill="none" stroke="#333" stroke-width="1.5"/>
+          <path d="M19 18 L19 28" stroke="#333" stroke-width="1" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="hobby-info">
+        <h4>Watching Cartoons</h4>
+        <div class="bar-track">
+          <div class="bar-fill yellow" data-level="95%" style="width:0"></div>
+        </div>
+        <div class="bar-label"><span>Professional Viewer</span><span>95%</span></div>
+      </div>
+    </div>
+
+    <div class="hobby-card reveal">
+      <div class="hobby-icon-wrap">
+        <svg class="hobby-svg icon-svg svg-pc" viewBox="0 0 48 48">
+          <rect x="8" y="8" width="32" height="22" rx="2" fill="#3B82F6" opacity="0.85"/>
+          <rect x="11" y="11" width="26" height="16" rx="1" fill="#1a1a2e"/>
+          <path d="M15 14 L25 19 L15 24 Z" fill="#10B981" opacity="0.8">
+            <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2s" repeatCount="indefinite"/>
+          </path>
+          <circle cx="30" cy="16" r="2" fill="var(--yellow)" opacity="0.8"/>
+          <circle cx="30" cy="22" r="2" fill="var(--red)" opacity="0.8"/>
+          <path d="M18 30 L18 34" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M12 34 L24 36 L36 34" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="22" y="34" width="4" height="3" rx="1" fill="#3B82F6"/>
+        </svg>
+      </div>
+      <div class="hobby-info">
+        <h4>Building on PC</h4>
+        <div class="bar-track">
+          <div class="bar-fill green" data-level="75%" style="width:0"></div>
+        </div>
+        <div class="bar-label"><span>Rising Creator</span><span>75%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DREAMS ─── -->
+<section id="dreams" class="section-alt">
+  <div class="dream-card">
+    <svg class="dream-icon-big icon-svg svg-controller" viewBox="0 0 64 64">
+      <rect x="6" y="22" width="52" height="28" rx="8" fill="var(--red)"/>
+      <rect x="10" y="26" width="44" height="20" rx="6" fill="#1a1a2e"/>
+      <circle cx="22" cy="36" r="5" fill="var(--yellow)"/>
+      <circle cx="42" cy="36" r="5" fill="var(--yellow)"/>
+      <rect x="26" y="8" width="12" height="6" rx="3" fill="var(--red)"/>
+      <path d="M32 8 L32 4" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="32" cy="14" r="2" fill="var(--yellow)"/>
+      <rect x="4" y="44" width="8" height="6" rx="2" fill="var(--red)"/>
+      <rect x="52" y="44" width="8" height="6" rx="2" fill="var(--red)"/>
+    </svg>
+    <span class="section-tag">✦ THE MISSION</span>
+    <h3>My Dream: <span class="highlight">Build Games</span></h3>
+    <p>I believe every great game starts with a single line of code. My mission is to learn, create, and one day build the kind of games that inspire the next generation of trainers.</p>
+    <div class="dream-stats">
+      <div class="dream-stat">
+        <div class="num">1</div>
+        <div class="label">Game Started</div>
+      </div>
+      <div class="dream-stat">
+        <div class="num">∞</div>
+        <div class="label">Ideas Ready</div>
+      </div>
+      <div class="dream-stat">
+        <div class="num">100%</div>
+        <div class="label">Determination</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONNECT ─── -->
+<section id="connect">
+  <div style="text-align:center">
+    <span class="section-tag">✦ LET'S TALK</span>
+    <h2 class="section-title">Connect <span class="highlight">With Me</span></h2>
+    <p class="section-sub" style="margin:0 auto 48px">Gotta catch 'em all — including new friends and collaborators!</p>
+  </div>
+
+  <div class="connect-grid">
+    <a href="https://www.google.com" class="connect-btn" target="_blank">
+      <svg class="connect-icon icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="currentColor"/></svg>
+      Explore Google
+    </a>
+    <a href="https://www.wikipedia.org" class="connect-btn" target="_blank">
+      <svg class="connect-icon icon-svg" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" fill="currentColor"/><path d="M10 9h8v2h-8zm0 3h4v2h-4zm0-6h8v2h-8z" fill="currentColor"/></svg>
+      Learn on Wikipedia
+    </a>
+    <a href="https://pokemon.com" class="connect-btn" target="_blank">
+      <svg class="connect-icon icon-svg svg-lightning" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-12h-7l1-8z" fill="currentColor"/></svg>
+      Pokémon Official
+    </a>
+    <a href="https://scratch.mit.edu" class="connect-btn" target="_blank">
+      <svg class="connect-icon icon-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" fill="currentColor"/><path d="M8 10h2v4H8zm4 0h2v4h-2zm4 0h2v4h-2z" fill="currentColor"/></svg>
+      Scratch (Learn Coding)
+    </a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <svg class="footer-pokeball icon-svg" viewBox="0 0 24 24">
+    <path d="M12 2 A10 10 0 1 0 12 22 A10 10 0 1 0 12 2" fill="none" stroke="var(--text-secondary)" stroke-width="1"/>
+    <path d="M2 12 L22 12" stroke="var(--text-secondary)" stroke-width="2"/>
+    <path d="M12 2 A10 10 0 0 1 22 12" fill="var(--red)"/>
+    <path d="M12 22 A10 10 0 0 1 2 12" fill="var(--white)"/>
+    <circle cx="12" cy="12" r="3.5" fill="none" stroke="var(--text-secondary)" stroke-width="2"/>
+    <circle cx="12" cy="12" r="1.5" fill="var(--white)"/>
+  </svg>
+  <p>© 2026 Dwayne's Trainer Profile — Built with ❤️ and a whole lot of ⚡</p>
+</footer>
+
+<script>
+// ─── LOADER ───
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+  }, 1200);
+});
+
+// ─── MOBILE MENU ───
+const mobileBtn = document.getElementById('mobileBtn');
+const navLinks = document.getElementById('navLinks');
+
+mobileBtn.addEventListener('click', () => {
+  mobileBtn.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileBtn.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
+
+// ─── DARK MODE (SHINY TOGGLE) ───
+const shinyToggle = document.getElementById('shinyToggle');
+const html = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) html.setAttribute('data-theme', savedTheme);
+
+shinyToggle.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+});
+
+// ─── SCROLL REVEAL (Intersection Observer) ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const bar = entry.target.querySelector('.bar-fill');
+      if (bar) {
+        const level = bar.dataset.level;
+        requestAnimationFrame(() => {
+          bar.style.width = level;
+          bar.classList.add('fill');
+        });
+      }
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.hobby-card').forEach(card => observer.observe(card));
+
+// ─── ACTIVE NAV LINK ───
+const allSections = document.querySelectorAll('section[id]');
+const navAnchors = document.querySelectorAll('.nav-links a');
+
+function updateActiveLink() {
+  const scrollY = window.scrollY + 150;
+  let current = '';
+
+  allSections.forEach(section => {
+    const top = section.offsetTop;
+    const bottom = top + section.offsetHeight;
+    if (scrollY >= top && scrollY < bottom) {
+      current = section.id;
+    }
+  });
+
+  navAnchors.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink);
+window.addEventListener('load', updateActiveLink);
+</script>
+</body>
+</html>
